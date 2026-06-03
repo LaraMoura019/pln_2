@@ -1,0 +1,101 @@
+{% extends 'layout.html' %} <!-- identifica que é um filho-->
+
+{% block head %}
+    <title> Lista de Conceitos </title>
+{% endblock %}
+
+{% block body %}
+    <!--filtro das letras-->
+    <div class="container py-5">
+            <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+                <a href="{{ url_for('listar_conceitos', termo_pesquisa=termo_pesquisa, word_boundary=word_boundary, case_sensitive=case_sensitive) }}" 
+                   class="btn btn-lg {{ 'btn-primary' if not letra_ativa else 'btn-outline-primary' }}">Todos</a>
+
+                {% for letra in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %}
+                    <a href="{{ url_for('listar_conceitos', letra=letra, termo_pesquisa=termo_pesquisa, word_boundary=word_boundary, case_sensitive=case_sensitive) }}" 
+                       class="btn btn-lg {{ 'btn-primary' if letra_ativa == letra else 'btn-outline-primary' }}">
+                       {{ letra }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!--adicao de conceito-->
+    <p>
+      <a class="btn btn-primary mx-3 tex-end" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Adicionar Conceito
+      </a>
+    </p>
+    <div class="collapse mx-3" id="collapseExample">
+        <div class="p-3 ">
+            <form action="/conceitos" method="POST">
+                <div class="col-md-3 mb-3">
+                    <label for="designacao" class="form-label">Designação</label>
+                    <input type="text" class="form-control" id="designacao" name="designacao">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <input type="text" class="form-control" id="descricao" name="descricao">
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar</button>
+            </form>
+        </div>
+    </div>
+    <div class="mx-3">
+        <form action="/conceitos" method="GET">
+            <input type="hidden" name="letra" value="{{ letra_ativa }}">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Pesquisar conceito..." name="termo_pesquisa" value="{{ termo_pesquisa }}">
+                <button class="btn btn-primary" type="submit">Pesquisar</button>
+            </div>
+        
+        <div class="form-check mx-2 mt-2">
+          <input class="form-check-input" type="checkbox" name="word_boundary" id="WordBoundary" value="1" {{ 'checked' if word_boundary }}>
+          <label class="form-check-label" for="WordBoundary">WordBoundary</label>
+        </div>
+        <div class="form-check mx-2 mb-3">
+          <input class="form-check-input" type="checkbox" name="case_sensitive" id="case_sensitive" value="1" {{ 'checked' if case_sensitive }}>
+          <label class="form-check-label" for="case_sensitive">Case sensitive</label>
+        </div>
+      </form>
+    </div>
+    
+    <!--lista dos conceitos-->
+    <div class="container" style="max-width: 1100px;">
+        <div class="card border-0 shadow-sm">
+            <div class="list-group list-group-flush rounded">
+                {% for original, formatado in conceitos.items() %}
+                    <a href="/conceitos/{{ original }}" 
+                       class="list-group-item list-group-item-action py-3 fs-4 fw-semibold ps-4">
+                        {{ formatado | safe }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!--divisao dos conceitos em paginas-->
+    <nav aria-label="Navegação das páginas" class="mt-5">
+        <ul class="pagination justify-content-center flex-wrap">
+
+            <li class="page-item {{ 'disabled' if pagina_atual == 1 }}">
+                <a class="page-link" href="{{ url_for('listar_conceitos', pagina=pagina_atual - 1, letra=letra_ativa, termo_pesquisa=termo_pesquisa, word_boundary=word_boundary, case_sensitive=case_sensitive) }}">Anterior</a>
+            </li>
+
+            {% for p in range(1, total_paginas + 1) %}
+                {% if p == 1 or p == total_paginas or (p >= pagina_atual - 2 and p <= pagina_atual + 2) %}
+                    <li class="page-item {{ 'active' if p == pagina_atual }}">
+                        <a class="page-link" href="{{ url_for('listar_conceitos', pagina=p, letra=letra_ativa, termo_pesquisa=termo_pesquisa, word_boundary=word_boundary, case_sensitive=case_sensitive) }}">{{ p }}</a>
+                    </li>
+                {% elif p == pagina_atual - 3 or p == pagina_atual + 3 %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endfor %}
+
+            <li class="page-item {{ 'disabled' if pagina_atual == total_paginas }}">
+                <a class="page-link" href="{{ url_for('listar_conceitos', pagina=pagina_atual + 1, letra=letra, termo_pesquisa=termo_pesquisa, word_boundary=word_boundary, case_sensitive=case_sensitive) }}">Seguinte</a>
+            </li>
+
+        </ul>
+    </nav>
+{% endblock %}

@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        
+        <link href="https://cdn.datatables.net/2.3.7/css/dataTables.dataTables.css" rel="stylesheet">
+        {% block head %}
+        {% endblock %}
+    </head>
+    <body style="background-color: rgba(11, 69, 123, 0.584);" >
+        
+        <header>
+          
+          <nav class="navbar navbar-dark bg-dark">
+            <div class="container-fluid justify-content-center"> <div class="navbar-nav d-flex flex-row gap-3 fs-5 fw-bold"> 
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/conceitos">Conceitos</a>
+                <a class="nav-link" href="/pesquisar">Pesquisar</a>
+                <a class="nav-link" href="/tabela">Tabela</a>
+              </div>
+            </div>
+          </nav>
+          
+          <!-- Background image -->
+          <div class="p-5 text-center bg-image" style="
+              background-image: url('https://t3.ftcdn.net/jpg/10/77/62/76/360_F_1077627622_IZZ0q86uptaY2xq0hyx9qDt2u57gPKxh.jpg');
+              height: 300px;
+            ">
+            <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+              <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="text-white">
+                  <h1 class="mb-2">Dicionário Médico</h1>
+                  <a data-mdb-ripple-init class="btn btn-outline-light btn-lg" href="conceitos" role="button">Procurar conceitos</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Background image -->
+        </header>
+        
+        {% block body %}
+        
+        {% endblock %}
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    
+    <script src="https://cdn.datatables.net/2.3.7/js/dataTables.js" ></script>
+    
+    <script src="/static/scripts/script.js"></script>
+    
+</html>
