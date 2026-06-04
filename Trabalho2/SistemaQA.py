@@ -41,7 +41,7 @@ def executar_ri_qa(query_pesquisa, pergunta_qa, metodo="tfidf"): #usa o modelo t
     for artigo, score_ri in top_artigos:
         contexto = artigo.get("artigo completo", "").strip()
         if not contexto:
-            contexto = artigo.get("abstract", "").strip()
+            contexto = artigo.get("abstract", "")
         if not contexto:
             continue  # salta artigos sem texto
 

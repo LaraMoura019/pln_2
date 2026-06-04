@@ -20,12 +20,12 @@
                 <div class="mb-3">
                     <label for="metodo" class="form-label fw-semibold text-secondary">Motor de Recuperação de Informação (RI):</label>
                     <select class="form-select form-control" id="metodo" name="metodo">
-                        <option value="tfidf" {% if metodo_antigo == 'tfidf' %}selected{% endif %}>TF-IDF (Frequência de Palavras)</option>
-                        <option value="sbert" {% if metodo_antigo == 'sbert' %}selected{% endif %}>SBERT (Significado Semântico via IA)</option>
+                        <option value="tfidf" {% if metodo_antigo == 'tfidf' %}selected{% endif %}>TF-IDF</option>
+                        <option value="sbert" {% if metodo_antigo == 'sbert' %}selected{% endif %}>SBERT</option>
                     </select>
                 </div>
                 
-                <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">Pesquisar e Extrair Resposta</button>
+                <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">Pesquisar</button>
             </form>
         </div>
     </div>
