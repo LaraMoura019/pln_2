@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+    <title>Pesquisa Inteligente</title>
+{% endblock %}
+
+{% block body %}
+<div class="container py-5" style="max-width: 1000px;">
+    
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+            <h2 class="mb-4 text-center fw-bold text-dark">Procura e Resposta Inteligentes</h2>
+            
+            <form action="/pesquisaInteligente" method="POST">
+                <div class="mb-3">
+                    <label for="query" class="form-label fs-5 fw-semibold text-secondary">Introduza o seu termo ou pergunta médica:</label>
+                    <input type="text" class="form-control form-control-lg" id="query" name="query" value="{{ query_antiga if query_antiga else '' }}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="metodo" class="form-label fw-semibold text-secondary">Motor de Recuperação de Informação (RI):</label>
+                    <select class="form-select form-control" id="metodo" name="metodo">
+                        <option value="tfidf" {% if metodo_antigo == 'tfidf' %}selected{% endif %}>TF-IDF (Frequência de Palavras)</option>
+                        <option value="sbert" {% if metodo_antigo == 'sbert' %}selected{% endif %}>SBERT (Significado Semântico via IA)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">Pesquisar e Extrair Resposta</button>
+            </form>
+        </div>
+    </div>
+
+    {% if resultado %}
+        {% if resultado.sucesso %}
+            <div class="card border-0 shadow-sm mb-5">
+                <div class="card-header bg-success text-white py-3">
+                    <h4 class="mb-0 fw-bold">Resposta Clínica Sugerida</h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="fs-4 lh-base text-dark fw-medium">
+                        "{{ resultado.resposta_bert }}"
+                    </p>
+                    <span class="badge bg-light text-success border border-success px-3 py-2 fs-6">
+                        Grau de Certeza do Modelo: <strong>{{ resultado.score_confianca }}%</strong>
+                    </span>
+                    <hr class="my-3">
+                    <p class="mb-0 text-muted small">Extraído do artigo: <strong>{{ resultado.titulo_artigo }}</strong></p>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-warning border-0 shadow-sm p-4 mb-5" role="alert">
+                <h5 class="fw-bold">Nota de Question Answering:</h5>
+                <p class="mb-0">{{ resultado.erro }}</p>
+            </div>
+        {% endif %}
+
+        <div class="mt-5">
+            <h3 class="fw-bold text-dark mb-4">Artigos Encontrados na Coleção (Por Ordem de Relevância)</h3>
+            
+            {% if resultado.ranking_completo %}
+                <div class="row row-gap-3">
+                    {% for artigo, score in resultado.ranking_completo[:15] %}
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm {% if loop.first %}border-start border-primary border-4{% endif %}">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-start mb-2", class>
+                                        {% if artigo.link %}
+                                            <a href="{{artigo.link}}", class="card-title fw-bold text-primary mb-0">{{artigo.title}}</a>
+                                        {% else %}
+                                        <h5 class="card-title fw-bold text-primary mb-0">{{ artigo.title }}</h5>
+                                        {% endif %}
+                                        <span class="badge bg-secondary px-3 py-2">Score: {{ "%.4f"|format(score) }}</span>
+                                    </div>
+                                    
+                                    <p class="card-text text-dark mt-2"><strong>Resumo (Abstract):</strong> {{ artigo.abstract }}</p>
+                                    
+                                    {% if artigo.keywords %}
+                                        <p class="card-text mb-0"><small class="text-muted"><strong>Palavras-chave:</strong> {{ artigo.keywords }}</small></p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">Nenhum artigo disponível no ranking.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

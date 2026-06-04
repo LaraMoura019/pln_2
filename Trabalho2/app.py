@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
 import json
 import re
+from SistemaQA import executar_ri_qa
 
 app = Flask(__name__)
 
-f_db = open ("./dicionario_medico.json","r", encoding="utf-8")
+f_db = open ("../dicionario_medico.json","r", encoding="utf-8")
 db =  json.load (f_db)
 
 @app.get("/")
@@ -104,4 +105,21 @@ def pagina_nao_encontrada(e):
 def visualizar_tabela():
     return render_template('tabela.html', conceitos=db)
 
-app.run(host="localhost", port=4002, debug=True)
+#------ Pesquisa Inteligente -----------------
+@app.get("/pesquisaInteligente")
+def pesquisaInteligente():
+    return render_template("pesquisaInteligente.html", resultado=None, query_antiga="", metodo_antigo="tfidf")
+
+@app.post("/pesquisaInteligente")
+def postPesquisaInteligente():
+    query= request.form.get("query", "")
+    metodo= request.form.get("metodo", "tfidf")
+
+    resultado= None
+    if query:
+        resultado= executar_ri_qa(query_pesquisa=query, pergunta_qa=query, metodo=metodo)
+    
+    return render_template("pesquisaInteligente.html", resultado=resultado, query_antiga= query, metodo_antigo= metodo)
+
+
+app.run(host="localhost", port=4002, debug=True, use_reloader=False)
